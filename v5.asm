@@ -13,7 +13,7 @@ PRINT:
     OUT 8
     MOVB AH, CL
     MOVB AL, 255
-    OUT 9
+    OUT 9 ; Display the character
     DEC C
     MOV [COUNTER], C
     CMP C, 0x002F
@@ -42,12 +42,28 @@ MAIN:
     MOV A, 1
     OUT 7
 
-    ; LEVEL 1: 10 leaf symbols and 9 note symbols
+    ; LEVEL 1: 10 club symbols and 9 leaf symbols
 
-    ; Printing 10 leaf symbols
-    MOV B, 10 ; Counter for leaves
+    ; Printing 10 club symbols
+    MOV B, 10 ; Counter for clubs
+    MOVB CH, 5 ; Club symbol
+    MOVB CL, 215 ; Club color
+
+LEVEL1_CLUBS:
+    DEC B ; Decrease counter
+    CALL RANDOM_NUM ; Get random position
+    MOV A, D ; Position for club
+    OUT 8
+    MOVB AH, CH ; Club symbol
+    MOVB AL, CL ; Club color
+    OUT 9 ; Display the character
+    CMP B, 0
+    JNE LEVEL1_CLUBS
+
+    ; Printing 9 leaf symbols
+    MOV B, 9 ; Counter for leaf
     MOVB CH, 6 ; Leaf symbol
-    MOVB CL, 215 ; Leaf color
+    MOVB CL, 185 ; Leaf color
 
 LEVEL1_LEAVES:
     DEC B ; Decrease counter
@@ -56,25 +72,9 @@ LEVEL1_LEAVES:
     OUT 8
     MOVB AH, CH ; Leaf symbol
     MOVB AL, CL ; Leaf color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL1_LEAVES
-
-    ; Printing 9 note symbols
-    MOV B, 9 ; Counter for notes
-    MOVB CH, 14 ; Note symbol
-    MOVB CL, 185 ; Note color
-
-LEVEL1_NOTES:
-    DEC B ; Decrease counter
-    CALL RANDOM_NUM ; Get random position
-    MOV A, D ; Position for note
-    OUT 8
-    MOVB AH, CH ; Note symbol
-    MOVB AL, CL ; Note color
-    OUT 9
-    CMP B, 0
-    JNE LEVEL1_NOTES
 
     ; Wait for user input to proceed to Level 2
     MOV A, 5000
