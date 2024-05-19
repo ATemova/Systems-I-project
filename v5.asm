@@ -42,12 +42,28 @@ MAIN:
     MOV A, 1
     OUT 7
 
-    ; LEVEL 1: 10 leaf symbols and 9 note symbols
+; LEVEL 1: 10 club symbols and 9 leaf symbols
 
-    ; Printing 10 leaf symbols
-    MOV B, 10 ; Counter for leaves
+    ; Printing 10 club symbols
+    MOV B, 10 ; Counter for clubs
+    MOVB CH, 5 ; Club symbol
+    MOVB CL, 215 ; Club color
+
+LEVEL1_CLUBS:
+    DEC B ; Decrease counter
+    CALL RANDOM_NUM ; Get random position
+    MOV A, D ; Position for club
+    OUT 8
+    MOVB AH, CH ; Club symbol
+    MOVB AL, CL ; Club color
+    OUT 9
+    CMP B, 0
+    JNE LEVEL1_CLUBS
+
+    ; Printing 9 leaf symbols
+    MOV B, 9 ; Counter for leaves
     MOVB CH, 6 ; Leaf symbol
-    MOVB CL, 215 ; Leaf color
+    MOVB CL, 185 ; Leaf color
 
 LEVEL1_LEAVES:
     DEC B ; Decrease counter
@@ -59,22 +75,6 @@ LEVEL1_LEAVES:
     OUT 9
     CMP B, 0
     JNE LEVEL1_LEAVES
-
-    ; Printing 9 note symbols
-    MOV B, 9 ; Counter for notes
-    MOVB CH, 14 ; Note symbol
-    MOVB CL, 185 ; Note color
-
-LEVEL1_NOTES:
-    DEC B ; Decrease counter
-    CALL RANDOM_NUM ; Get random position
-    MOV A, D ; Position for note
-    OUT 8
-    MOVB AH, CH ; Note symbol
-    MOVB AL, CL ; Note color
-    OUT 9
-    CMP B, 0
-    JNE LEVEL1_NOTES
 
     ; Proceed to Level 2
     MOV [QUIT], 0  ; Reset QUIT flag
@@ -95,7 +95,7 @@ START_LEVEL2:
     MOV A, 3
     OUT 7 ; Clear screen
 
-    ; LEVEL 2: 20 heart symbols and 19 diamond symbols
+; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
     ; Printing 20 heart symbols
     MOV B, 20 ; Counter for hearts
@@ -148,7 +148,7 @@ START_LEVEL3:
     MOV A, 3
     OUT 7 ; Clear screen
 
-    ; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
+; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
 
     ; Printing 30 empty smile emojis
     MOV B, 30 ; Counter for empty smiles
