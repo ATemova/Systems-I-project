@@ -13,7 +13,7 @@ PRINT:
     OUT 8
     MOVB AH, CL
     MOVB AL, 255
-    OUT 9
+    OUT 9 ; Display the character
     DEC C
     MOV [COUNTER], C
     CMP C, 0x002F
@@ -56,7 +56,7 @@ LEVEL1_CLUBS:
     OUT 8
     MOVB AH, CH ; Club symbol
     MOVB AL, CL ; Club color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL1_CLUBS
 
@@ -72,7 +72,7 @@ LEVEL1_LEAVES:
     OUT 8
     MOVB AH, CH ; Leaf symbol
     MOVB AL, CL ; Leaf color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL1_LEAVES
 
@@ -109,7 +109,7 @@ LEVEL2_HEARTS:
     OUT 8
     MOVB AH, CH ; Heart symbol
     MOVB AL, CL ; Heart color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL2_HEARTS
 
@@ -125,7 +125,7 @@ LEVEL2_DIAMONDS:
     OUT 8
     MOVB AH, CH ; Diamond symbol
     MOVB AL, CL ; Diamond color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL2_DIAMONDS
 
@@ -162,7 +162,7 @@ LEVEL3_EMPTY_SMILE:
     OUT 8
     MOVB AH, CH ; Empty smile symbol
     MOVB AL, CL ; Empty smile color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL3_EMPTY_SMILE
 
@@ -178,7 +178,7 @@ LEVEL3_FULL_SMILE:
     OUT 8
     MOVB AH, CH ; Full smile symbol
     MOVB AL, CL ; Full smile color
-    OUT 9
+    OUT 9 ; Display the character
     CMP B, 0
     JNE LEVEL3_FULL_SMILE
 
