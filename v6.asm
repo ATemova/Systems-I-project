@@ -1,6 +1,7 @@
 JMP MAIN        		; Jump to the MAIN section
 JMP isr         		; Jump to the interrupt service routine
 
+;===========================================================|
 str_loading1: DB "Guess the\x00"
 str_loading2: DB "bigger number\x00"
 str_loading3: DB "of symbols..\x00"
@@ -9,6 +10,7 @@ start_game_str_2: DB "to START\x00"
 CLUBS: DB "CLUBS -> C\x00"
 LEAVES: DB "LEAVES -> L\x00"
 SCORE: DB "0"
+;===========================================================|
 
 QUIT: DW 0      		; Define a variable QUIT with initial value 0
 COUNTER: DW 0x0035  	; Define a variable COUNTER with initial value 0x0039
@@ -104,6 +106,7 @@ WAIT_FOR_ENTER:
     MOV A, 3
     OUT 7 				; Clear screen
     
+;===========================================================|   
 ; LEVEL 1: 10 club symbols and 9 leaf symbols
 
     ; Printing 10 club symbols
@@ -187,9 +190,9 @@ START_LEVEL2:
     
     MOV A, 3
     OUT 7
- 
-;cel prv level so se gledanje dali e tochno 
- 
+;===========================================================|
+
+;===========================================================|
 ; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
     ; Printing 20 heart symbols
@@ -242,7 +245,9 @@ WAIT_FOR_LEVEL3:
 START_LEVEL3:
     MOV A, 3
     OUT 7 			    ; Clear screen
+;===========================================================|
 
+;===========================================================|
 ; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
 
     ; Printing 30 empty smile emojis
@@ -283,7 +288,8 @@ LEVEL3_FULL_SMILE:
     OUT 3
     MOV A, 2
     OUT 0
-
+;===========================================================|
+    
     ; Continue with the rest of the code
 LOOP:
     MOV A, [QUIT] 		; Move the value from memory location QUIT to register A
