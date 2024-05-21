@@ -1,7 +1,7 @@
-JMP MAIN        		; Jump to the MAIN section
-JMP isr         		; Jump to the interrupt service routine
+JMP MAIN        		; jump to the MAIN section
+JMP isr         		; jump to the interrupt service routine
 
-;===========================================================|
+;===============================================================================================|
 str_loading1: DB "Guess the\x00"
 str_loading2: DB "bigger number\x00"
 str_loading3: DB "of symbols..\x00"
@@ -14,15 +14,15 @@ HEARTS: DB "HEARTS -> H\x00"
 EMPTY_SMILE: DB "EMPTY SMILE -> E\x00"
 FULL_SMILE: DB "FULL SMILE -> F\x00"
 SCORE: DB "0"
-;===========================================================|
+;===============================================================================================|
 
-QUIT: DW 0      		; Define a variable QUIT with initial value 0
-COUNTER: DW 0x0035  	; Define a variable COUNTER with initial value 0x0039
+QUIT: DW 0      		; define a variable QUIT with initial value 0
+COUNTER: DW 0x0035  	; define a variable COUNTER with initial value 0x0039
 
-isr:            		; Start of the interrupt service routine
-    PUSH A      		; Push the value of register A onto the stack
-    MOV C, [COUNTER]    ; Move the value from memory location COUNTER to register C
-    MOV [QUIT], 1  		; Move the value 1 to the memory location QUIT to quit the program
+isr:            		; start of the interrupt service routine
+    PUSH A      		; push the value of register A onto the stack
+    MOV C, [COUNTER]    ; move the value from memory location COUNTER to register C
+    MOV [QUIT], 1  		; move the value 1 to the memory location QUIT to quit the program
     MOV A, 2
     OUT 2
     POP A
@@ -37,35 +37,35 @@ RANDOM_NUM:
 draw_text: 				; draw the text
    	
 DRAW_TEXT_LOOP:
-    MOV A, D 			;SCREEN POSS
-    OUT 8
-    MOVB AH, [B]		;GET CHAR
+    MOV A, D 			; screen position
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, [B]		; get character
     CMPB AH, 0
     JE DRAW_TEXT_END
-    MOVB AL, 255		; COLOR
-    OUT 9				;PRINT ON SCREN
-    INC B				;NEXT CHAR
-    ADD D, 2			;NEXT SCREEN CELL
-    JMP DRAW_TEXT_LOOP  ; Repeat for the next character
+    MOVB AL, 255		; color
+    OUT 9				; print on screen
+    INC B				; next character
+    ADD D, 2			; next screen cell
+    JMP DRAW_TEXT_LOOP  ; repeat for the next character
 
 DRAW_TEXT_END:
     RET
 
 draw: 					; draw function
-    MOVB BH, [C]        ; Get the character 
-    CMPB BH, 0          ; If the character is 0, we are done 
-    JE draw_return      ; Jump if equal
-    MOV A, D            ; Set the VRAM address for the character 
+    MOVB BH, [C]        ; get the character 
+    CMPB BH, 0          ; if the character is 0, we are done 
+    JE draw_return      ; jump if equal
+    MOV A, D            ; set the VRAM address for the character 
     OUT 8               ; through the VIDADDR I/O register
-    MOV A, B            ; Set the character and its color 
+    MOV A, B            ; set the character and its color 
     OUT 9               ; through the VIDDATA I/O register
-    INC C               ; Point to the next character
-    ADD D, 2            ; Set the next VRAM address
+    INC C               ; point to the next character
+    ADD D, 2            ; set the next VRAM address
     JMP draw 
 draw_return: 
     RET 
 
-check_press: 			; Function to check for key press
+check_press: 			; function to check for key press
     IN 5 				; read the keyboard status 
     CMP A, 0 			; has anything happened? 
     JE check_press 		; if not, read the keyboard status again 
@@ -77,29 +77,29 @@ check_press: 			; Function to check for key press
     JMP check_press 	; otherwise, keep checking for key press
 
 start_game:
-    MOV [QUIT], 1 		; Set QUIT flag to 1 to exit the loading loop
+    MOV [QUIT], 1 		; set QUIT flag to 1 to exit the loading loop
     RET
 
 MAIN:
     MOV SP, 0x0FFF
     MOV A, 1
-    OUT 7
-    ;starting screen
-    MOV D, 0x0502       ;Poss
-    MOV B, str_loading1 ;
-    CALL draw_text 		; Display loading text
-    MOV D, 0x0602
-    MOV B, str_loading2 ;
-    CALL draw_text 
-    MOV D, 0x0702
-    MOV B, str_loading3 ;
-    CALL draw_text
-    MOV D, 0x0902
-    MOV B, start_game_str_1 ;
-    CALL draw_text
-    MOV D, 0x0A02
-    MOV B, start_game_str_2 ;
-    CALL draw_text
+    OUT 7					; clear screen
+    ; starting screen
+    MOV D, 0x0502       	; position
+    MOV B, str_loading1 	; string
+    CALL draw_text 			; display loading text
+    MOV D, 0x0602			; position
+    MOV B, str_loading2 	; string
+    CALL draw_text			; display loading text
+    MOV D, 0x0702			; position
+    MOV B, str_loading3 	; string
+    CALL draw_text			; display loading text
+    MOV D, 0x0902			; position
+    MOV B, start_game_str_1 ; string
+    CALL draw_text			; display loading text
+    MOV D, 0x0A02			; position
+    MOV B, start_game_str_2 ; string
+    CALL draw_text			; display loading text
 
 WAIT_FOR_ENTER:
     CALL check_press
@@ -108,46 +108,46 @@ WAIT_FOR_ENTER:
     JNE WAIT_FOR_ENTER
 
     MOV A, 3
-    OUT 7 				; Clear screen
+    OUT 7 				; clear screen
     
-;===========================================================|   
+;===============================================================================================|
 ; LEVEL 1: 10 club symbols and 9 leaf symbols
 
-    ; Printing 10 club symbols
-    MOV B, 10 			; Counter for clubs
-    MOVB CH, 5 			; Club symbol
-    MOVB CL, 148 		; Club color
+    ; printing 10 club symbols
+    MOV B, 10 			; counter for clubs
+    MOVB CH, 5 			; club symbol
+    MOVB CL, 148 		; club color
 
 LEVEL1_CLUBS:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for club
-    OUT 8
-    MOVB AH, CH 		; Club symbol
-    MOVB AL, CL 		; Club color
-    OUT 9 				; Display the character
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for club
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; club symbol
+    MOVB AL, CL 		; club color
+    OUT 9 				; display the character
     CMP B, 0
     JNE LEVEL1_CLUBS
 
-    ; Printing 9 leaf symbols
-    MOV B, 9 			; Counter for leaves
-    MOVB CH, 6 			; Leaf symbol
-    MOVB CL, 196 		; Leaf color
+    ; printing 9 leaf symbols
+    MOV B, 9 			; counter for leaves
+    MOVB CH, 6 			; leaf symbol
+    MOVB CL, 196 		; leaf color
 
 LEVEL1_LEAVES:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for leaf
-    OUT 8
-    MOVB AH, CH 		; Leaf symbol
-    MOVB AL, CL 		; Leaf color
-    OUT 9 				; Display the character
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for leaf
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; leaf symbol
+    MOVB AL, CL 		; leaf color
+    OUT 9 				; display the character
     CMP B, 0
     JNE LEVEL1_LEAVES
 
-    ; Proceed to Level 2
-    MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 10000
+    ; proceed to Level 2
+    MOV [QUIT], 0  		; reset QUIT flag
+    MOV A, 50000
     OUT 3
     MOV A, 2
     OUT 0
@@ -162,7 +162,7 @@ WAIT_FOR_LEVEL2:
 START_LEVEL2:
 	
     MOV A, 3
-    OUT 7 				; Clear screen
+    OUT 7 				; clear screen
     MOV D, 0x0602
     MOV B, LEAVES
     CALL draw_text
@@ -193,48 +193,48 @@ START_LEVEL2:
     MOVB [0x100F], BL
     
     MOV A, 3
-    OUT 7
-;===========================================================|
+    OUT 7               ; clear screen
+;===============================================================================================|
 
-;===========================================================|
+;===============================================================================================|
 ; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
-    ; Printing 20 heart symbols
-    MOV B, 20			; Counter for hearts
-    MOVB CH, 3 			; Heart symbol
-    MOVB CL, 196 		; Heart color
+    ; printing 20 heart symbols
+    MOV B, 20			; counter for hearts
+    MOVB CH, 3 			; heart symbol
+    MOVB CL, 196 		; heart color
 
 LEVEL2_HEARTS:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for heart
-    OUT 8
-    MOVB AH, CH 		; Heart symbol
-    MOVB AL, CL 		; Heart color
-    OUT 9 				; Display the character
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for heart
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; heart symbol
+    MOVB AL, CL 		; heart color
+    OUT 9 				; display the character
     CMP B, 0
     JNE LEVEL2_HEARTS
 
-    					; Printing 19 diamond symbols
-    MOV B, 19 			; Counter for diamonds
-    MOVB CH, 4 			; Diamond symbol
-    MOVB CL, 252 		; Diamond color
+    					; printing 19 diamond symbols
+    MOV B, 19 			; counter for diamonds
+    MOVB CH, 4 			; diamond symbol
+    MOVB CL, 252 		; diamond color
 
 LEVEL2_DIAMONDS:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for diamond
-    OUT 8
-    MOVB AH, CH 		; Diamond symbol
-    MOVB AL, CL 		; Diamond color
-    OUT 9 				; Display the character
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for diamond
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; diamond symbol
+    MOVB AL, CL 		; diamond color
+    OUT 9 				; display the character
     CMP B, 0
     JNE LEVEL2_DIAMONDS
 
-    ; Proceed to Level 3
+    ; proceed to Level 3
     MOV [COUNTER], 0x0035
-    MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 10000
+    MOV [QUIT], 0  		; reset QUIT flag
+    MOV A, 50000
     OUT 3
     MOV A, 2
     OUT 0
@@ -248,7 +248,7 @@ WAIT_FOR_LEVEL3:
 
 START_LEVEL3:
     MOV A, 3
-    OUT 7 			    ; Clear screen
+    OUT 7 			    ; clear screen
     MOV D, 0x0602
     MOV B, DIAMONDS
     CALL draw_text
@@ -279,58 +279,56 @@ START_LEVEL3:
     MOVB [0x100F], BL
     
     MOV A, 3
-    OUT 7    
-;===========================================================|
+    OUT 7    			; clear screen
+;===============================================================================================|
 
-;===========================================================|
+;===============================================================================================|
 ; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
 
-    ; Printing 30 empty smile emojis
-    MOV B, 30 			; Counter for empty smiles
-    MOVB CH, 1 			; Empty smile symbol
-    MOVB CL, 3 			; Empty smile color
+    ; printing 30 empty smile emojis
+    MOV B, 30 			; counter for empty smiles
+    MOVB CH, 1 			; empty smile symbol
+    MOVB CL, 3 			; empty smile color
 
 LEVEL3_EMPTY_SMILE:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for empty smile
-    OUT 8
-    MOVB AH, CH 		; Empty smile symbol
-    MOVB AL, CL 		; Empty smile color
-    OUT 9 				; Display the character
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for empty smile
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; empty smile symbol
+    MOVB AL, CL 		; empty smile color
+    OUT 9 				; display the character
     CMP B, 0
     JNE LEVEL3_EMPTY_SMILE
 
-    ; Printing 29 full smile emojis
-    MOV B, 29 			; Counter for full smiles
-    MOVB CH, 2 			; Full smile symbol
-    MOVB CL, 7 			; Full smile color
+    ; printing 29 full smile emojis
+    MOV B, 29 			; counter for full smiles
+    MOVB CH, 2 			; full smile symbol
+    MOVB CL, 7 			; full smile color
 
 LEVEL3_FULL_SMILE:
-    DEC B 				; Decrease counter
-    CALL RANDOM_NUM 	; Get random position
-    MOV A, D 			; Position for full smile
-    OUT 8
-    MOVB AH, CH 		; Full smile symbol
-    MOVB AL, CL 		; Full smile color
-    OUT 9 				; Display the character
-    CMP B, 0 			; Compare counter to 0
-    JNE LEVEL3_FULL_SMILE ; Jump back to LEVEL3_FULL_SMILE if counter is not zero
+    DEC B 				; decrease counter
+    CALL RANDOM_NUM 	; get random position
+    MOV A, D 			; position for full smile
+    OUT 8				; through the VIDADDR I/O register
+    MOVB AH, CH 		; full smile symbol
+    MOVB AL, CL 		; full smile color
+    OUT 9 				; display the character
+    CMP B, 0 			; compare counter to 0
+    JNE LEVEL3_FULL_SMILE ; jump back to LEVEL3_FULL_SMILE if counter is not zero
 
 
 
 	MOV [COUNTER], 0x0035
-    MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 10000
+    MOV [QUIT], 0  		; reset QUIT flag
+    MOV A, 50000
     OUT 3
     MOV A, 2
     OUT 0
     STI
-;===========================================================|
+;===============================================================================================|
     
-    ; Continue with the rest of the code
-	
-	
+    ; continue with the rest of the code	
     WAIT_FOR_LEVEL4:
     MOV A, [QUIT]
     CMP A, 1
@@ -339,7 +337,7 @@ LEVEL3_FULL_SMILE:
 	
    START_LEVEL4:
     MOV A, 3
-    OUT 7
+    OUT 7			    ; clear screen
 	MOV D, 0x0602
     MOV B, FULL_SMILE
     CALL draw_text
@@ -369,14 +367,11 @@ LEVEL3_FULL_SMILE:
     MOVB BL, [SCORE]
     MOVB [0x100F], BL
     
-     
-
- 	
 BREAK:
 	;za da imash restart treba cli da se izbrishe
-    ;CLI            		; Clear the interrupt flag 
-    MOV A, 3       		; Move the value 3 to register A
-    OUT 7          		; Output the value in register A to port 7 to clear the screen
+    ;CLI            	; clear the interrupt flag 
+    MOV A, 3       		; move the value 3 to register A
+    OUT 7          		; clear screen
     
     ;KOPIRAV GO OD GORE MRZESHE ME DA GO PISHAM PA is staviv eden 
     WAIT_LOOP_FOR_CHOCIE1:
@@ -393,4 +388,4 @@ BREAK:
     ;MOV A, 3
     ;OUT 7
     JMP MAIN
-    HLT            		; Halt the CPU, stopping program execution
+    HLT            		; halt the CPU, stopping program execution
