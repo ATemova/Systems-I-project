@@ -220,7 +220,7 @@ START_LEVEL3:
     ; Printing 30 empty smile emojis
     MOV B, 30 ; Counter for empty smiles
     MOVB CH, 1 ; Empty smile symbol
-    MOVB CL, 7 ; Empty smile color
+    MOVB CL, 3 ; Empty smile color
 
 LEVEL3_EMPTY_SMILE:
     DEC B ; Decrease counter
@@ -236,7 +236,7 @@ LEVEL3_EMPTY_SMILE:
     ; Printing 29 full smile emojis
     MOV B, 29 ; Counter for full smiles
     MOVB CH, 2 ; Full smile symbol
-    MOVB CL, 11 ; Full smile color
+    MOVB CL, 7 ; Full smile color
 
 LEVEL3_FULL_SMILE:
     DEC B ; Decrease counter
