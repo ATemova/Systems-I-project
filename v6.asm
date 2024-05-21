@@ -16,21 +16,7 @@ COUNTER: DW 0x0035  	; Define a variable COUNTER with initial value 0x0039
 isr:            		; Start of the interrupt service routine
     PUSH A      		; Push the value of register A onto the stack
     MOV C, [COUNTER]    ; Move the value from memory location COUNTER to register C
-    
-PRINT:
-    MOV A, 0    		; Move the value 0 to register A
-    OUT 8       		; Output the value in register A to port 8
-    MOVB AH, CL 		; Move the high byte of register CL to register AH
-    MOVB AL, 255    	; Move the value 255 to the low byte of register AL
-    OUT 9       		; Output the value in register AL to port 9 to display the character
-    DEC C       		; Decrement the value in register C
-    MOV [COUNTER], C    ; Move the value in register C to the memory location COUNTER
-    CMP C, 0x002F  		; Compare the value in register C with 0x002F
-    JNE TIMER   		; Jump to the TIMER section if not equal to 0x002F
-
     MOV [QUIT], 1  		; Move the value 1 to the memory location QUIT to quit the program
-
-TIMER:
     MOV A, 2
     OUT 2
     POP A
@@ -39,8 +25,6 @@ TIMER:
 RANDOM_NUM:
     IN 10
     AND A, 0x0F1E
-    CMP A, 0x0004
-    JBE RANDOM_NUM
     MOV D, A
     RET
 
@@ -156,7 +140,7 @@ LEVEL1_LEAVES:
 
     ; Proceed to Level 2
     MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 5000
+    MOV A, 10000
     OUT 3
     MOV A, 2
     OUT 0
@@ -203,7 +187,9 @@ START_LEVEL2:
     
     MOV A, 3
     OUT 7
-  	  
+ 
+;cel prv level so se gledanje dali e tochno 
+ 
 ; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
     ; Printing 20 heart symbols
@@ -241,7 +227,7 @@ LEVEL2_DIAMONDS:
     ; Proceed to Level 3
     MOV [COUNTER], 0x0035
     MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 5000
+    MOV A, 10000
     OUT 3
     MOV A, 2
     OUT 0
@@ -254,7 +240,6 @@ WAIT_FOR_LEVEL3:
     JMP WAIT_FOR_LEVEL3
 
 START_LEVEL3:
-    CLI
     MOV A, 3
     OUT 7 			    ; Clear screen
 
@@ -292,6 +277,13 @@ LEVEL3_FULL_SMILE:
     CMP B, 0 			; Compare counter to 0
     JNE LEVEL3_FULL_SMILE ; Jump back to LEVEL3_FULL_SMILE if counter is not zero
 
+ 	MOV [COUNTER], 0x0035
+    MOV [QUIT], 0  		; Reset QUIT flag
+    MOV A, 10000
+    OUT 3
+    MOV A, 2
+    OUT 0
+
     ; Continue with the rest of the code
 LOOP:
     MOV A, [QUIT] 		; Move the value from memory location QUIT to register A
@@ -300,7 +292,24 @@ LOOP:
     JMP LOOP       		; Otherwise, jump back to LOOP to continue the loop
 
 BREAK:
-    CLI            		; Clear the interrupt flag
+	;za da imash restart treba cli da se izbrishe
+    ;CLI            		; Clear the interrupt flag 
     MOV A, 3       		; Move the value 3 to register A
     OUT 7          		; Output the value in register A to port 7 to clear the screen
+    
+    ;KOPIRAV GO OD GORE MRZESHE ME DA GO PISHAM PA is staviv eden 
+    WAIT_LOOP_FOR_CHOCIE1:
+    IN 5
+    CMP A, 0
+    JNE END_WAIT_LOOP_FOR_CHOCIE1
+	JMP WAIT_LOOP_FOR_CHOCIE1
+    END_WAIT_LOOP_FOR_CHOCIE1:  
+    IN 6
+    CMP A, 'r'
+    JNE WAIT_LOOP_FOR_CHOCIE1
+    ;najverojatno ke treba daa stavesh clear screen tuka
+    ;I OVAA E KODO ZA CLEAR SCREEN
+    ;MOV A, 3
+    ;OUT 7
+    JMP MAIN
     HLT            		; Halt the CPU, stopping program execution
