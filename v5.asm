@@ -42,10 +42,10 @@ str_loading4: DB " symbols..\x00"
 start_game_str_1: DB " Press tab\x00"
 start_game_str_2: DB "to START\x00"
 
-draw_text: ;;draw the text
-    MOV C, str_loading1 ; Point to the "Guess" string. 
-    MOV B, 25           ; Set the color of the text to 25. 
-    MOV D, 0x100C       ; The VRAM position of the text. 
+draw_text: ; draw the text
+    MOV C, str_loading1 ; Point to the "Guess" string
+    MOV B, 25           ; Set the color of the text to 25
+    MOV D, 0x100C       ; The VRAM position of the text
     CALL draw           ; Call function to actually draw the text 
     MOV C, str_loading2 
     MOV D, 0x1204 
@@ -64,33 +64,33 @@ draw_text: ;;draw the text
     CALL draw
     RET 
 
-draw: ;;draw function
-    MOVB BH, [C]        ; Get a character. 
-    CMPB BH, 0          ; If the character is 0, we are done. 
+draw: ; draw function
+    MOVB BH, [C]        ; Get a character 
+    CMPB BH, 0          ; If the character is 0, we are done 
     JE draw_return 
     MOV A, D            ; Set the VRAM address for the character 
-    OUT 8               ; through the VIDADDR I/O register. 
+    OUT 8               ; through the VIDADDR I/O register
     MOV A, B            ; Set the character and its color 
-    OUT 9               ; through the VIDDATA I/O register. 
-    INC C               ; Point to the next character. 
-    ADD D, 2            ; Set the next VRAM address. 
+    OUT 9               ; through the VIDDATA I/O register
+    INC C               ; Point to the next character
+    ADD D, 2            ; Set the next VRAM address
     JMP draw 
 draw_return: 
     RET 
 
-check_press: ;; Function to check for key press
-    IN 5 ;;read the keyboard status 
-    CMP A, 0 ;;has anything happened? 
-    JE check_press ;;if not, read the keyboard status again 
-    MOV B, A ;;let the status be in register B 
-    IN 6 ;;read the key code 
-    AND B, 1 ;;mask out the keyboard bit 
-    CMP B, 1 ;;is this bit set to 1? 
-    JE start_game ;;if yes, start the game
-    JMP check_press ;;otherwise, keep checking for key press
+check_press: ; Function to check for key press
+    IN 5 ; read the keyboard status 
+    CMP A, 0 ; has anything happened? 
+    JE check_press ; if not, read the keyboard status again 
+    MOV B, A ; let the status be in register B 
+    IN 6 ; read the key code 
+    AND B, 1 ; mask out the keyboard bit 
+    CMP B, 1 ; is this bit set to 1? 
+    JE start_game ; if yes, start the game
+    JMP check_press ; otherwise, keep checking for key press
 
 start_game:
-    MOV [QUIT], 1 ;; Set QUIT flag to 1 to exit the loading loop
+    MOV [QUIT], 1 ; Set QUIT flag to 1 to exit the loading loop
     RET
 
 MAIN:
@@ -114,7 +114,7 @@ WAIT_FOR_ENTER:
     ; Printing 10 club symbols
     MOV B, 10 ; Counter for clubs
     MOVB CH, 5 ; Club symbol
-    MOVB CL, 215 ; Club color
+    MOVB CL, 148 ; Club color
 
 LEVEL1_CLUBS:
     DEC B ; Decrease counter
@@ -130,7 +130,7 @@ LEVEL1_CLUBS:
     ; Printing 9 leaf symbols
     MOV B, 9 ; Counter for leaves
     MOVB CH, 6 ; Leaf symbol
-    MOVB CL, 185 ; Leaf color
+    MOVB CL, 196 ; Leaf color
 
 LEVEL1_LEAVES:
     DEC B ; Decrease counter
@@ -167,7 +167,7 @@ START_LEVEL2:
     ; Printing 20 heart symbols
     MOV B, 20 ; Counter for hearts
     MOVB CH, 3 ; Heart symbol
-    MOVB CL, 209 ; Heart color
+    MOVB CL, 196 ; Heart color
 
 LEVEL2_HEARTS:
     DEC B ; Decrease counter
@@ -183,7 +183,7 @@ LEVEL2_HEARTS:
     ; Printing 19 diamond symbols
     MOV B, 19 ; Counter for diamonds
     MOVB CH, 4 ; Diamond symbol
-    MOVB CL, 211 ; Diamond color
+    MOVB CL, 252 ; Diamond color
 
 LEVEL2_DIAMONDS:
     DEC B ; Decrease counter
