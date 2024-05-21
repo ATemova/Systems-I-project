@@ -317,6 +317,29 @@ LEVEL3_FULL_SMILE:
     CMP B, 0 			; Compare counter to 0
     JNE LEVEL3_FULL_SMILE ; Jump back to LEVEL3_FULL_SMILE if counter is not zero
 
+
+
+	MOV [COUNTER], 0x0035
+    MOV [QUIT], 0  		; Reset QUIT flag
+    MOV A, 10000
+    OUT 3
+    MOV A, 2
+    OUT 0
+    STI
+;===========================================================|
+    
+    ; Continue with the rest of the code
+	
+	
+    WAIT_FOR_LEVEL4:
+    MOV A, [QUIT]
+    CMP A, 1
+    JE START_LEVEL4
+    JMP WAIT_FOR_LEVEL4
+	
+   START_LEVEL4:
+    MOV A, 3
+    OUT 7
 	MOV D, 0x0602
     MOV B, FULL_SMILE
     CALL draw_text
@@ -324,19 +347,19 @@ LEVEL3_FULL_SMILE:
     MOV B, EMPTY_SMILE
     CALL draw_text
     
-    WAIT_LOOP_FOR_CHOICE2:
+    WAIT_LOOP_FOR_CHOICE3:
     IN 5
     CMP A, 0
-    JNE END_WAIT_LOOP_FOR_CHOICE2
-	JMP WAIT_LOOP_FOR_CHOICE2
-    END_WAIT_LOOP_FOR_CHOICE2:
+    JNE END_WAIT_LOOP_FOR_CHOICE3
+	JMP WAIT_LOOP_FOR_CHOICE3
+    END_WAIT_LOOP_FOR_CHOICE3:
     
     IN 6
     CMP A, 'd'
     JE print2_score
     CMP A, 'h'
     JE increment_score
-    JMP WAIT_LOOP_FOR_CHOICE2
+    JMP WAIT_LOOP_FOR_CHOICE3
     
     increment_score:
     MOVB BL, [SCORE]
@@ -346,24 +369,9 @@ LEVEL3_FULL_SMILE:
     MOVB BL, [SCORE]
     MOVB [0x100F], BL
     
-    MOV A, 3
-    OUT 7    
+     
 
- 	MOV [COUNTER], 0x0035
-    MOV [QUIT], 0  		; Reset QUIT flag
-    MOV A, 10000
-    OUT 3
-    MOV A, 2
-    OUT 0
-;===========================================================|
-    
-    ; Continue with the rest of the code
-LOOP:
-    MOV A, [QUIT] 		; Move the value from memory location QUIT to register A
-    CMP A, 1       		; Compare the value in register A with 1
-    JE BREAK       		; Jump to BREAK if equal to 1
-    JMP LOOP       		; Otherwise, jump back to LOOP to continue the loop
-
+ 	
 BREAK:
 	;za da imash restart treba cli da se izbrishe
     ;CLI            		; Clear the interrupt flag 
