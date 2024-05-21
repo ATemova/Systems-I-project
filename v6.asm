@@ -9,6 +9,10 @@ start_game_str_1: DB "Press tab\x00"
 start_game_str_2: DB "to START\x00"
 CLUBS: DB "CLUBS -> C\x00"
 LEAVES: DB "LEAVES -> L\x00"
+DIAMONDS: DB "DIAMONDS -> D\x00"
+HEARTS: DB "HEARTS -> H\x00"
+EMPTY_SMILE: DB "EMPTY SMILE -> E\x00"
+FULL_SMILE: DB "FULL SMILE -> F\x00"
 SCORE: DB "0"
 ;===========================================================|
 
@@ -166,19 +170,19 @@ START_LEVEL2:
     MOV B, CLUBS
     CALL draw_text
     
-    WAIT_LOOP_FOR_CHOCIE:
+    WAIT_LOOP_FOR_CHOICE:
     IN 5
     CMP A, 0
-    JNE END_WAIT_LOOP_FOR_CHOCIE
-	JMP WAIT_LOOP_FOR_CHOCIE
-    END_WAIT_LOOP_FOR_CHOCIE:
+    JNE END_WAIT_LOOP_FOR_CHOICE
+	JMP WAIT_LOOP_FOR_CHOICE
+    END_WAIT_LOOP_FOR_CHOICE:
     
     IN 6
     CMP A, 'l'
     JE print_score
     CMP A, 'c'
     JE inc_score
-    JMP WAIT_LOOP_FOR_CHOCIE
+    JMP WAIT_LOOP_FOR_CHOICE
     
     inc_score:
     MOVB BL, [SCORE]
@@ -245,6 +249,37 @@ WAIT_FOR_LEVEL3:
 START_LEVEL3:
     MOV A, 3
     OUT 7 			    ; Clear screen
+    MOV D, 0x0602
+    MOV B, DIAMONDS
+    CALL draw_text
+    MOV D, 0x0702
+    MOV B, HEARTS
+    CALL draw_text
+    
+    WAIT_LOOP_FOR_CHOICE1:
+    IN 5
+    CMP A, 0
+    JNE END_WAIT_LOOP_FOR_CHOICE1
+	JMP WAIT_LOOP_FOR_CHOICE1
+    END_WAIT_LOOP_FOR_CHOICE1:
+    
+    IN 6
+    CMP A, 'd'
+    JE print1_score
+    CMP A, 'h'
+    JE incr_score
+    JMP WAIT_LOOP_FOR_CHOICE1
+    
+    incr_score:
+    MOVB BL, [SCORE]
+    INCB BL
+    MOVB [SCORE], BL
+    print1_score:
+    MOVB BL, [SCORE]
+    MOVB [0x100F], BL
+    
+    MOV A, 3
+    OUT 7    
 ;===========================================================|
 
 ;===========================================================|
@@ -281,6 +316,38 @@ LEVEL3_FULL_SMILE:
     OUT 9 				; Display the character
     CMP B, 0 			; Compare counter to 0
     JNE LEVEL3_FULL_SMILE ; Jump back to LEVEL3_FULL_SMILE if counter is not zero
+
+	MOV D, 0x0602
+    MOV B, FULL_SMILE
+    CALL draw_text
+    MOV D, 0x0702
+    MOV B, EMPTY_SMILE
+    CALL draw_text
+    
+    WAIT_LOOP_FOR_CHOICE2:
+    IN 5
+    CMP A, 0
+    JNE END_WAIT_LOOP_FOR_CHOICE2
+	JMP WAIT_LOOP_FOR_CHOICE2
+    END_WAIT_LOOP_FOR_CHOICE2:
+    
+    IN 6
+    CMP A, 'd'
+    JE print2_score
+    CMP A, 'h'
+    JE increment_score
+    JMP WAIT_LOOP_FOR_CHOICE2
+    
+    increment_score:
+    MOVB BL, [SCORE]
+    INCB BL
+    MOVB [SCORE], BL
+    print2_score:
+    MOVB BL, [SCORE]
+    MOVB [0x100F], BL
+    
+    MOV A, 3
+    OUT 7    
 
  	MOV [COUNTER], 0x0035
     MOV [QUIT], 0  		; Reset QUIT flag
