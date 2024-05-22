@@ -6,14 +6,14 @@ JMP isr         		; jump to the interrupt service routine
 ;===============================================================================================|
 str_loading1: DB "Guess the\x00"
 str_loading2: DB "bigger number\x00"
-str_loading3: DB "of symbols..\x00"
-start_game_str_1: DB "Press tab\x00"
-start_game_str_2: DB "to START\x00"
+str_loading3: DB "of symbols\x00"
+start_game_str_1: DB "Press anywhere\x00"
+start_game_str_2: DB "   to START\x00"
 CLUBS: DB "CLUBS -> C\x00"
 LEAVES: DB "LEAVES -> L\x00"
 DIAMONDS: DB "DIAMONDS -> D\x00"
 HEARTS: DB "HEARTS -> H\x00"
-EMPTY_SMILE: DB "SMILE -> E\x00"
+SMILE: DB "SMILE -> S\x00"
 FULL_SMILE: DB "FULL SMILE -> F\x00"
 SCORE: DB "0"
 ;===============================================================================================|
@@ -90,13 +90,13 @@ MAIN:
     MOV A, 1
     OUT 7					; clear screen
     ; starting screen
-    MOV D, 0x0502       	; position
+    MOV D, 0x0402       	; position
     MOV B, str_loading1 	; string
     CALL draw_text 			; display loading text
-    MOV D, 0x0602			; position
+    MOV D, 0x0502			; position
     MOV B, str_loading2 	; string
     CALL draw_text			; display loading text
-    MOV D, 0x0702			; position
+    MOV D, 0x0602			; position
     MOV B, str_loading3 	; string
     CALL draw_text			; display loading text
     MOV D, 0x0902			; position
@@ -263,7 +263,6 @@ LEVEL2_DIAMONDS:
     JNE LEVEL2_DIAMONDS
 
 ; proceed to Level 3
-    MOV [COUNTER], 0x0035
     MOV [QUIT], 0  		; reset QUIT flag
     MOV A, 50000
     OUT 3
@@ -318,19 +317,19 @@ START_LEVEL3:
 
 ; printing 30 empty smile emojis
     MOV B, 30 			; counter for empty smiles
-    MOVB CH, 1 			; empty smile symbol
-    MOVB CL, 3 			; empty smile color
+    MOVB CH, 1 			; smile symbol
+    MOVB CL, 3 			; smile color
 
-LEVEL3_EMPTY_SMILE:
+LEVEL3_SMILE:
     DEC B 				; decrease counter
     CALL RANDOM_NUM 	; get random position
     MOV A, D 			; position for empty smile
     OUT 8				; through the VIDADDR I/O register
-    MOVB AH, CH 		; empty smile symbol
-    MOVB AL, CL 		; empty smile color
+    MOVB AH, CH 		; smile symbol
+    MOVB AL, CL 		; smile color
     OUT 9 				; display the character
     CMP B, 0
-    JNE LEVEL3_EMPTY_SMILE
+    JNE LEVEL3_SMILE
 
 ; printing 29 full smile emojis
     MOV B, 29 			; counter for full smiles
@@ -349,7 +348,6 @@ LEVEL3_FULL_SMILE:
     JNE LEVEL3_FULL_SMILE ; jump back to LEVEL3_FULL_SMILE if counter is not zero
     
 ; proceed to Level 4
-    MOV [COUNTER], 0x0035
     MOV [QUIT], 0       ; reset QUIT flag
     MOV A, 50000
     OUT 3
@@ -367,7 +365,7 @@ START_LEVEL4:
     MOV A, 3
     OUT 7 			    ; clear screen
     MOV D, 0x0602
-    MOV B, EMPTY_SMILE
+    MOV B, SMILE
     CALL draw_text
     MOV D, 0x0702
     MOV B, FULL_SMILE
@@ -381,7 +379,7 @@ START_LEVEL4:
     END_WAIT_LOOP_FOR_CHOICEE1:
     
     IN 6
-    CMP A, 'e'
+    CMP A, 's'
     JE printt1_score
     CMP A, 'f'
     JE increm_score
