@@ -108,26 +108,26 @@ MAIN:
 ;===============================================================================================|
     
 ;===============================================================================================|
-    return_string:				;												;
-        PUSH A					;												;
-        MOV A, score2			;												;
-        MOV D, 0x1000			;												;
-        loop_print_score:		;												;
-            PUSH B				;												;
-            MOVB BL , [A]		;												;
-            CMPB BL , 0			;print score on text display					;
-            JE return_string_score;												;
-            MOVB [D], BL		;												;
-            INC A				;												;
-            INC D				;												;
-            JMP loop_print_score;												;
-																				;
-	return_string_score:		;print the values on the text display			;
-        MOVB BL, [SCORE]		;												;
-    	MOVB [SCORE], BL		;												;
-    	MOVB [0x1007], BL		;												;
-        POP B					;												;
-        POP A					;												;
+return_string:																
+    PUSH A																	
+    MOV A, score2															
+    MOV D, 0x1000															
+loop_print_score:														
+    PUSH B																
+    MOVB BL , [A]														
+    CMPB BL , 0				;print score on text display					
+    JE return_string_score												
+    MOVB [D], BL														
+    INC A																
+    INC D																
+    JMP loop_print_score												
+																				
+return_string_score:		;print the values on the text display			
+    MOVB BL, [SCORE]														
+  	MOVB [SCORE], BL														
+   	MOVB [0x1007], BL														
+    POP B																	
+    POP A																	
 ;===============================================================================================|
 
 ;===============================================================================================|
@@ -144,7 +144,7 @@ WAIT_FOR_ENTER:
 ;===============================================================================================|  
 ; LEVEL 1: 10 club symbols and 9 leaf symbols
 
-    ; printing 10 club symbols
+; printing 10 club symbols
     MOV B, 10 			; counter for clubs
     MOVB CH, 5 			; club symbol
     MOVB CL, 148 		; club color
@@ -160,7 +160,7 @@ LEVEL1_CLUBS:
     CMP B, 0
     JNE LEVEL1_CLUBS
 
-    ; printing 9 leaf symbols
+; printing 9 leaf symbols
     MOV B, 9 			; counter for leaves
     MOVB CH, 6 			; leaf symbol
     MOVB CL, 196 		; leaf color
@@ -176,7 +176,7 @@ LEVEL1_LEAVES:
     CMP B, 0
     JNE LEVEL1_LEAVES
 
-    ; proceed to Level 2
+; proceed to Level 2
     MOV [QUIT], 0  		; reset QUIT flag
     MOV A, 50000
     OUT 3
@@ -230,7 +230,7 @@ START_LEVEL2:
 ;===============================================================================================|
 ; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
-    ; printing 20 heart symbols
+; printing 20 heart symbols
     MOV B, 20			; counter for hearts
     MOVB CH, 3 			; heart symbol
     MOVB CL, 196 		; heart color
@@ -262,7 +262,7 @@ LEVEL2_DIAMONDS:
     CMP B, 0
     JNE LEVEL2_DIAMONDS
 
-    ; proceed to Level 3
+; proceed to Level 3
     MOV [COUNTER], 0x0035
     MOV [QUIT], 0  		; reset QUIT flag
     MOV A, 50000
@@ -316,7 +316,7 @@ START_LEVEL3:
 ;===============================================================================================|
 ; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
 
-    ; printing 30 empty smile emojis
+; printing 30 empty smile emojis
     MOV B, 30 			; counter for empty smiles
     MOVB CH, 1 			; empty smile symbol
     MOVB CL, 3 			; empty smile color
@@ -332,7 +332,7 @@ LEVEL3_EMPTY_SMILE:
     CMP B, 0
     JNE LEVEL3_EMPTY_SMILE
 
-    ; printing 29 full smile emojis
+; printing 29 full smile emojis
     MOV B, 29 			; counter for full smiles
     MOVB CH, 2 			; full smile symbol
     MOVB CL, 7 			; full smile color
@@ -348,7 +348,7 @@ LEVEL3_FULL_SMILE:
     CMP B, 0 			; compare counter to 0
     JNE LEVEL3_FULL_SMILE ; jump back to LEVEL3_FULL_SMILE if counter is not zero
     
-    ; proceed to Level 4
+; proceed to Level 4
     MOV [COUNTER], 0x0035
     MOV [QUIT], 0       ; reset QUIT flag
     MOV A, 50000
@@ -400,7 +400,7 @@ START_LEVEL4:
 ;===============================================================================================|
 
 ;===============================================================================================|
-    ; continue with the rest of the code	
+; continue with the rest of the code	
     
 BREAK:
  
