@@ -2,6 +2,8 @@ JMP MAIN        		; jump to the MAIN section
 JMP isr         		; jump to the interrupt service routine
 
 ;===============================================================================================|
+
+;===============================================================================================|
 str_loading1: DB "Guess the\x00"
 str_loading2: DB "bigger number\x00"
 str_loading3: DB "of symbols..\x00"
@@ -11,10 +13,13 @@ CLUBS: DB "CLUBS -> C\x00"
 LEAVES: DB "LEAVES -> L\x00"
 DIAMONDS: DB "DIAMONDS -> D\x00"
 HEARTS: DB "HEARTS -> H\x00"
-EMPTY_SMILE: DB "EMPTY SMILE -> E\x00"
+EMPTY_SMILE: DB "SMILE -> E\x00"
 FULL_SMILE: DB "FULL SMILE -> F\x00"
 SCORE: DB "0"
 ;===============================================================================================|
+
+;===============================================================================================|
+score2: DB "Score: \x00"
 
 QUIT: DW 0      		; define a variable QUIT with initial value 0
 COUNTER: DW 0x0035  	; define a variable COUNTER with initial value 0x0039
@@ -100,7 +105,32 @@ MAIN:
     MOV D, 0x0A02			; position
     MOV B, start_game_str_2 ; string
     CALL draw_text			; display loading text
+;===============================================================================================|
+    
+;===============================================================================================|
+    return_string:				;												;
+        PUSH A					;												;
+        MOV A, score2			;												;
+        MOV D, 0x1000			;												;
+        loop_print_score:		;												;
+            PUSH B				;												;
+            MOVB BL , [A]		;												;
+            CMPB BL , 0			;print score on text display					;
+            JE return_string_score;												;
+            MOVB [D], BL		;												;
+            INC A				;												;
+            INC D				;												;
+            JMP loop_print_score;												;
+																				;
+	return_string_score:		;print the values on the text display			;
+        MOVB BL, [SCORE]		;												;
+    	MOVB [SCORE], BL		;												;
+    	MOVB [0x1007], BL		;												;
+        POP B					;												;
+        POP A					;												;
+;===============================================================================================|
 
+;===============================================================================================|
 WAIT_FOR_ENTER:
     CALL check_press
     MOV A, [QUIT]
@@ -109,8 +139,9 @@ WAIT_FOR_ENTER:
 
     MOV A, 3
     OUT 7 				; clear screen
-    
 ;===============================================================================================|
+
+;===============================================================================================|  
 ; LEVEL 1: 10 club symbols and 9 leaf symbols
 
     ; printing 10 club symbols
@@ -190,12 +221,12 @@ START_LEVEL2:
     MOVB [SCORE], BL
     print_score:
     MOVB BL, [SCORE]
-    MOVB [0x100F], BL
+    MOVB [0x1007], BL
     
     MOV A, 3
     OUT 7               ; clear screen
 ;===============================================================================================|
-
+    
 ;===============================================================================================|
 ; LEVEL 2: 20 heart symbols and 19 diamond symbols
 
@@ -276,7 +307,7 @@ START_LEVEL3:
     MOVB [SCORE], BL
     print1_score:
     MOVB BL, [SCORE]
-    MOVB [0x100F], BL
+    MOVB [0x1007], BL
     
     MOV A, 3
     OUT 7    			; clear screen
@@ -316,56 +347,60 @@ LEVEL3_FULL_SMILE:
     OUT 9 				; display the character
     CMP B, 0 			; compare counter to 0
     JNE LEVEL3_FULL_SMILE ; jump back to LEVEL3_FULL_SMILE if counter is not zero
-
-
-
-	MOV [COUNTER], 0x0035
-    MOV [QUIT], 0  		; reset QUIT flag
+    
+    ; proceed to Level 4
+    MOV [COUNTER], 0x0035
+    MOV [QUIT], 0       ; reset QUIT flag
     MOV A, 50000
     OUT 3
     MOV A, 2
     OUT 0
     STI
-;===============================================================================================|
-    
-    ; continue with the rest of the code	
-    WAIT_FOR_LEVEL4:
+
+WAIT_FOR_LEVEL4:
     MOV A, [QUIT]
     CMP A, 1
     JE START_LEVEL4
     JMP WAIT_FOR_LEVEL4
-	
-   START_LEVEL4:
+
+START_LEVEL4:
     MOV A, 3
-    OUT 7			    ; clear screen
-	MOV D, 0x0602
-    MOV B, FULL_SMILE
-    CALL draw_text
-    MOV D, 0x0702
+    OUT 7 			    ; clear screen
+    MOV D, 0x0602
     MOV B, EMPTY_SMILE
     CALL draw_text
+    MOV D, 0x0702
+    MOV B, FULL_SMILE
+    CALL draw_text
     
-    WAIT_LOOP_FOR_CHOICE3:
+    WAIT_LOOP_FOR_CHOICEE1:
     IN 5
     CMP A, 0
-    JNE END_WAIT_LOOP_FOR_CHOICE3
-	JMP WAIT_LOOP_FOR_CHOICE3
-    END_WAIT_LOOP_FOR_CHOICE3:
+    JNE END_WAIT_LOOP_FOR_CHOICEE1
+	JMP WAIT_LOOP_FOR_CHOICEE1
+    END_WAIT_LOOP_FOR_CHOICEE1:
     
     IN 6
-    CMP A, 'd'
-    JE print2_score
-    CMP A, 'h'
-    JE increment_score
-    JMP WAIT_LOOP_FOR_CHOICE3
+    CMP A, 'e'
+    JE printt1_score
+    CMP A, 'f'
+    JE increm_score
+    JMP WAIT_LOOP_FOR_CHOICEE1
     
-    increment_score:
+    increm_score:
     MOVB BL, [SCORE]
     INCB BL
     MOVB [SCORE], BL
-    print2_score:
+    printt1_score:
     MOVB BL, [SCORE]
-    MOVB [0x100F], BL
+    MOVB [0x1007], BL
+   
+    MOV A, 3
+    OUT 7    			; clear screen
+;===============================================================================================|
+
+;===============================================================================================|
+    ; continue with the rest of the code	
     
 BREAK:
 	;za da imash restart treba cli da se izbrishe
@@ -383,9 +418,11 @@ BREAK:
     IN 6
     CMP A, 'r'
     JNE WAIT_LOOP_FOR_CHOCIE1
-    ;najverojatno ke treba daa stavesh clear screen tuka
-    ;I OVAA E KODO ZA CLEAR SCREEN
-    ;MOV A, 3
-    ;OUT 7
+    
+    ;TODO: score=0 
+    ;MOVB BL, [SCORE]
+    ;MOV BL, 0
+    ;MOVB [SCORE], BL
+    
     JMP MAIN
     HLT            		; halt the CPU, stopping program execution
