@@ -403,12 +403,10 @@ START_LEVEL4:
     ; continue with the rest of the code	
     
 BREAK:
-	;za da imash restart treba cli da se izbrishe
-    ;CLI            	; clear the interrupt flag 
+ 
     MOV A, 3       		; move the value 3 to register A
     OUT 7          		; clear screen
     
-    ;KOPIRAV GO OD GORE MRZESHE ME DA GO PISHAM PA is staviv eden 
     WAIT_LOOP_FOR_CHOCIE1:
     IN 5
     CMP A, 0
@@ -419,10 +417,9 @@ BREAK:
     CMP A, 'r'
     JNE WAIT_LOOP_FOR_CHOCIE1
     
-    ;TODO: score=0 
-    ;MOVB BL, [SCORE]
-    ;MOV BL, 0
-    ;MOVB [SCORE], BL
+    ; this is for reseting the score to 0 when clicking 'r'
+    ;MOV B, 0x30
+    ;MOVB [SCORE], AL 
     
     JMP MAIN
     HLT            		; halt the CPU, stopping program execution
