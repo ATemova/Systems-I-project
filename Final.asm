@@ -151,7 +151,7 @@ wait_for_enter:                  ; Start of the wait_for_enter routine
     MOVB CH, 5 					; club symbol
     MOVB CL, 148 				; club color
 
-LEVEL1_CLUBS:
+level1_clubs:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for club
@@ -160,14 +160,14 @@ LEVEL1_CLUBS:
     MOVB AL, CL 				; club color
     OUT 9 						; display the character
     CMP B, 0
-    JNE LEVEL1_CLUBS
+    JNE level1_clubs
 
 ; printing 9 leaf symbols
     MOV B, 9 					; counter for leaves
     MOVB CH, 6 					; leaf symbol
     MOVB CL, 196 				; leaf color
 
-LEVEL1_LEAVES:
+level1_leaves:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for leaf
@@ -176,7 +176,7 @@ LEVEL1_LEAVES:
     MOVB AL, CL 				; leaf color
     OUT 9 						; display the character
     CMP B, 0
-    JNE LEVEL1_LEAVES
+    JNE level1_leaves
 
 ; proceed to Level 2
     MOV [QUIT], 0               ; Reset QUIT flag
@@ -186,13 +186,13 @@ LEVEL1_LEAVES:
     OUT 0                       ; Output the value to port 0
     STI                         ; Set Interrupt Flag
 
-WAIT_FOR_LEVEL2:
+wait_for_level2:
     MOV A, [QUIT]               ; Load the value of QUIT into register A
     CMP A, 1                    ; Compare the value in A with 1
-    JE START_LEVEL2             ; If equal, jump to START_LEVEL2
-    JMP WAIT_FOR_LEVEL2         ; Otherwise, keep waiting
+    JE start_level2             ; If equal, jump to START_LEVEL2
+    JMP wait_for_level2         ; Otherwise, keep waiting
 
-START_LEVEL2:
+start_level2:
     MOV A, 3                    ; Load 3 into register A
     OUT 7                       ; Clear screen
     MOV D, 0x0602               ; Set the position to 0x0602
@@ -202,24 +202,25 @@ START_LEVEL2:
     MOV B, CLUBS                ; Load the CLUBS string into register B
     CALL draw_text              ; Call draw_text to display the CLUBS string
     
-WAIT_LOOP_FOR_CHOICE:
+wait_loop_for_choice:
     IN 5                        ; Read the keyboard status
     CMP A, 0                    ; Compare the status with 0
-    JNE END_WAIT_LOOP_FOR_CHOICE; If not equal, jump to END_WAIT_LOOP_FOR_CHOICE
-    JMP WAIT_LOOP_FOR_CHOICE    ; Otherwise, keep waiting
+    JNE end_wait_loop_for_choice; If not equal, jump to END_WAIT_LOOP_FOR_CHOICE
+    JMP wait_loop_for_choice    ; Otherwise, keep waiting
 
-END_WAIT_LOOP_FOR_CHOICE:
+end_wait_loop_for_choice:
     IN 6                        ; Read the key code
     CMP A, 'l'                  ; Compare the key code with 'l'
     JE print_score              ; If equal, jump to print_score
     CMP A, 'c'                  ; Compare the key code with 'c'
     JE inc_score                ; If equal, jump to inc_score
-    JMP WAIT_LOOP_FOR_CHOICE    ; Otherwise, keep waiting for a choice
+    JMP wait_loop_for_choice    ; Otherwise, keep waiting for a choice
     
 inc_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     INCB BL                     ; Increment the value in BL
     MOVB [SCORE], BL            ; Store the incremented value back into SCORE
+    
 print_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     MOVB [0x1007], BL           ; Display the score at address 0x1007
@@ -236,7 +237,7 @@ print_score:
     MOVB CH, 3 					; heart symbol
     MOVB CL, 196 				; heart color
 
-LEVEL2_HEARTS:
+level2_hearts:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for heart
@@ -245,14 +246,14 @@ LEVEL2_HEARTS:
     MOVB AL, CL 				; heart color
     OUT 9 						; display the character
     CMP B, 0
-    JNE LEVEL2_HEARTS
+    JNE level2_hearts
 
 ; printing 19 diamond symbols
     MOV B, 19 					; counter for diamonds
     MOVB CH, 4 					; diamond symbol
     MOVB CL, 15 				; diamond color
 	
-    LEVEL2_DIAMONDS:
+    level2_diamonds:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for diamond
@@ -261,7 +262,7 @@ LEVEL2_HEARTS:
     MOVB AL, CL 				; diamond color
     OUT 9 						; display the character
     CMP B, 0
-    JNE LEVEL2_DIAMONDS
+    JNE level2_diamonds
 
 ; proceed to Level 3
     MOV [QUIT], 0               ; Reset QUIT flag
@@ -270,13 +271,13 @@ LEVEL2_HEARTS:
     MOV A, 2                    ; Load 2 into register A
     OUT 0                       ; Output the value to port 0
 
-WAIT_FOR_LEVEL3:
+wait_for_level3:
     MOV A, [QUIT]               ; Load the value of QUIT into register A
     CMP A, 1                    ; Compare the value in A with 1
-    JE START_LEVEL3             ; If equal, jump to START_LEVEL3
-    JMP WAIT_FOR_LEVEL3         ; Otherwise, keep waiting
+    JE start_level3             ; If equal, jump to START_LEVEL3
+    JMP wait_for_level3         ; Otherwise, keep waiting
 
-START_LEVEL3:
+start_level3:
     MOV A, 3                    ; Load 3 into register A
     OUT 7                       ; Clear screen
     MOV D, 0x0602               ; Set the position to 0x0602
@@ -286,24 +287,25 @@ START_LEVEL3:
     MOV B, HEARTS               ; Load the HEARTS string into register B
     CALL draw_text              ; Call draw_text to display the HEARTS string
     
-WAIT_LOOP_FOR_CHOICE1:
+wait_loop_for_choice1:
     IN 5                        ; Read the keyboard status
     CMP A, 0                    ; Compare the status with 0
-    JNE END_WAIT_LOOP_FOR_CHOICE1; If not equal, jump to END_WAIT_LOOP_FOR_CHOICE1
-    JMP WAIT_LOOP_FOR_CHOICE1   ; Otherwise, keep waiting
+    JNE end_wait_loop_for_choice1; If not equal, jump to END_WAIT_LOOP_FOR_CHOICE1
+    JMP wait_loop_for_choice1   ; Otherwise, keep waiting
 
-END_WAIT_LOOP_FOR_CHOICE1:
+end_wait_loop_for_choice1:
     IN 6                        ; Read the key code
     CMP A, 'd'                  ; Compare the key code with 'd'
     JE print1_score             ; If equal, jump to print1_score
     CMP A, 'h'                  ; Compare the key code with 'h'
     JE incr_score               ; If equal, jump to incr_score
-    JMP WAIT_LOOP_FOR_CHOICE1   ; Otherwise, keep waiting for a choice
+    JMP wait_loop_for_choice1   ; Otherwise, keep waiting for a choice
     
 incr_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     INCB BL                     ; Increment the value in BL
     MOVB [SCORE], BL            ; Store the incremented value back into SCORE
+    
 print1_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     MOVB [0x1007], BL           ; Display the score at address 0x1007
@@ -320,7 +322,7 @@ print1_score:
     MOVB CH, 1 					; smile symbol
     MOVB CL, 100 				; smile color
 
-LEVEL3_SMILE:
+level3_smile:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for empty smile
@@ -329,14 +331,14 @@ LEVEL3_SMILE:
     MOVB AL, CL 				; smile color
     OUT 9 						; display the character
     CMP B, 0
-    JNE LEVEL3_SMILE
+    JNE level3_smile
 
 ; printing 29 full smile emojis
     MOV B, 29 					; counter for full smiles
     MOVB CH, 2 					; full smile symbol
     MOVB CL, 64					; full smile color
 
-LEVEL3_FULL_SMILE:
+level3_full_smile:
     DEC B 						; decrease counter
     CALL random_number 			; get random position
     MOV A, D 					; position for full smile
@@ -345,7 +347,7 @@ LEVEL3_FULL_SMILE:
     MOVB AL, CL 				; full smile color
     OUT 9 						; display the character
     CMP B, 0 					; compare counter to 0
-    JNE LEVEL3_FULL_SMILE 		; jump back to LEVEL3_FULL_SMILE if counter is not zero
+    JNE level3_full_smile 		; jump back to LEVEL3_FULL_SMILE if counter is not zero
     
 ; proceed to the end
     MOV [QUIT], 0               ; Reset QUIT flag
@@ -355,13 +357,13 @@ LEVEL3_FULL_SMILE:
     OUT 0                       ; Output the value to port 0
     STI                         ; Set Interrupt Flag
 
-WAIT_FOR_END:
+wait_for_end:
     MOV A, [QUIT]               ; Load the value of QUIT into register A
     CMP A, 1                    ; Compare the value in A with 1
-    JE START_END                ; If equal, jump to START_END
-    JMP WAIT_FOR_END            ; Otherwise, keep waiting
+    JE start_end                ; If equal, jump to START_END
+    JMP wait_for_end            ; Otherwise, keep waiting
 
-START_END:
+start_end:
     MOV A, 3                    ; Load 3 into register A
     OUT 7                       ; Clear screen
     MOV D, 0x0602               ; Set the position to 0x0602
@@ -371,25 +373,26 @@ START_END:
     MOV B, FULL_SMILE           ; Load the FULL_SMILE string into register B
     CALL draw_text              ; Call draw_text to display the FULL_SMILE string
     
-WAIT_LOOP_FOR_CHOICEE1:
+wait_loop_for_choice2:
     IN 5                        ; Read the keyboard status
     CMP A, 0                    ; Compare the status with 0
-    JNE END_WAIT_LOOP_FOR_CHOICEE1; If not equal, jump to END_WAIT_LOOP_FOR_CHOICEE1
-    JMP WAIT_LOOP_FOR_CHOICEE1  ; Otherwise, keep waiting
+    JNE end_wait_loop_for_choice2; If not equal, jump to END_WAIT_LOOP_FOR_CHOICEE1
+    JMP wait_loop_for_choice2  ; Otherwise, keep waiting
 
-END_WAIT_LOOP_FOR_CHOICEE1:
+end_wait_loop_for_choice2:
     IN 6                        ; Read the key code
     CMP A, 'f'                  ; Compare the key code with 'f'
-    JE printt1_score            ; If equal, jump to printt1_score
+    JE print2_score            ; If equal, jump to printt1_score
     CMP A, 's'                  ; Compare the key code with 's'
-    JE increm_score             ; If equal, jump to increm_score
-    JMP WAIT_LOOP_FOR_CHOICEE1  ; Otherwise, keep waiting for a choice
+    JE incre_score             ; If equal, jump to increm_score
+    JMP wait_loop_for_choice2  ; Otherwise, keep waiting for a choice
     
-increm_score:
+incre_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     INCB BL                     ; Increment the value in BL
     MOVB [SCORE], BL            ; Store the incremented value back into SCORE
-printt1_score:
+    
+print2_score:
     MOVB BL, [SCORE]            ; Load the current score into BL
     MOVB [0x1007], BL           ; Display the score at address 0x1007
    
@@ -403,16 +406,16 @@ BREAK:
     MOV A, 3                    ; Load the value 3 into register A
     OUT 7                       ; Clear screen
     
-WAIT_LOOP_FOR_CHOCIE1:
+wait_loop_for_choice3:
     IN 5                        ; Read the keyboard status
     CMP A, 0                    ; Compare the status with 0
-    JNE END_WAIT_LOOP_FOR_CHOCIE1; If not equal, jump to END_WAIT_LOOP_FOR_CHOCIE1
-    JMP WAIT_LOOP_FOR_CHOCIE1   ; Otherwise, keep waiting
+    JNE end_wait_loop_for_choice3; If not equal, jump to END_WAIT_LOOP_FOR_CHOCIE1
+    JMP wait_loop_for_choice3   ; Otherwise, keep waiting
 
-END_WAIT_LOOP_FOR_CHOCIE1:  
+end_wait_loop_for_choice3:  
     IN 6                        ; Read the key code
     CMP A, 'r'                  ; Compare the key code with 'r'
-    JNE WAIT_LOOP_FOR_CHOCIE1   ; If not equal, keep waiting for 'r'
+    JNE wait_loop_for_choice3   ; If not equal, keep waiting for 'r'
     
 ; this is for resetting the score to 0 when clicking 'r'
     MOV B, 0x30                 ; Load the value 0x30 into register B
