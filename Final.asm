@@ -246,10 +246,10 @@ LEVEL2_HEARTS:
     CMP B, 0
     JNE LEVEL2_HEARTS
 
-    					; printing 19 diamond symbols
+    ; printing 19 diamond symbols
     MOV B, 19 			; counter for diamonds
     MOVB CH, 4 			; diamond symbol
-    MOVB CL, 252 		; diamond color
+    MOVB CL, 15 		; diamond color
 
 LEVEL2_DIAMONDS:
     DEC B 				; decrease counter
@@ -318,7 +318,7 @@ START_LEVEL3:
 ; printing 30 smile emojis
     MOV B, 30 			; counter for empty smiles
     MOVB CH, 1 			; smile symbol
-    MOVB CL, 3 			; smile color
+    MOVB CL, 100 		; smile color
 
 LEVEL3_SMILE:
     DEC B 				; decrease counter
@@ -334,7 +334,7 @@ LEVEL3_SMILE:
 ; printing 29 full smile emojis
     MOV B, 29 			; counter for full smiles
     MOVB CH, 2 			; full smile symbol
-    MOVB CL, 19 			; full smile color
+    MOVB CL, 64			; full smile color
 
 LEVEL3_FULL_SMILE:
     DEC B 				; decrease counter
