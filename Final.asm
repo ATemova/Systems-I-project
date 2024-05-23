@@ -313,9 +313,9 @@ START_LEVEL3:
 ;===============================================================================================|
 
 ;===============================================================================================|
-; LEVEL 3: 30 empty smile emojis and 29 full smile emojis
+; LEVEL 3: 30 smile emojis and 29 full smile emojis
 
-; printing 30 empty smile emojis
+; printing 30 smile emojis
     MOV B, 30 			; counter for empty smiles
     MOVB CH, 1 			; smile symbol
     MOVB CL, 3 			; smile color
@@ -347,7 +347,7 @@ LEVEL3_FULL_SMILE:
     CMP B, 0 			; compare counter to 0
     JNE LEVEL3_FULL_SMILE ; jump back to LEVEL3_FULL_SMILE if counter is not zero
     
-; proceed to Level 4
+; proceed to the end
     MOV [QUIT], 0       ; reset QUIT flag
     MOV A, 50000
     OUT 3
@@ -355,13 +355,13 @@ LEVEL3_FULL_SMILE:
     OUT 0
     STI
 
-WAIT_FOR_LEVEL4:
+WAIT_FOR_END:
     MOV A, [QUIT]
     CMP A, 1
-    JE START_LEVEL4
-    JMP WAIT_FOR_LEVEL4
+    JE START_END
+    JMP WAIT_FOR_END
 
-START_LEVEL4:
+START_END:
     MOV A, 3
     OUT 7 			    ; clear screen
     MOV D, 0x0602
