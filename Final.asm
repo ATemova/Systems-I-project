@@ -416,10 +416,8 @@ end_wait_loop_for_choice3:
     IN 6                        ; read the key code
     CMP A, 'r'                  ; compare the key code with 'r'
     JNE wait_loop_for_choice3   ; if not equal, keep waiting for 'r'
-    
-; this is for resetting the score to 0 when clicking 'r'
-    MOV B, 0x30                 ; load the value 0x30 into register B
-    MOVB [SCORE], 0             ; reset SCORE to 0
-    
-    JMP MAIN                    ; jump to the start of MAIN
+
+reset:
+	MOVB [SCORE], 0x30
+	JMP MAIN	                ; jump to the start of MAIN
     HLT                         ; halt the CPU, stopping program execution
