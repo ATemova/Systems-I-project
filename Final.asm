@@ -422,4 +422,5 @@ end_wait_loop_for_choice3:
     MOVB [SCORE], 0             ; reset SCORE to 0
     
     JMP MAIN                    ; jump to the start of MAIN
-    HLT                         ; halt the CPU, stopping program execution
+    HLT                         ; halt the CPU, stopping program executionJMP MAIN        				; jump to the MAIN section
+JMP isr         				; jump to the interrupt service routine
